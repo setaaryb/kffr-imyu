@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Panel Admin - Free Fire Indramayu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f0505; color: #f8fafc; }
+        .comic-title { font-family: 'Bangers', cursive; letter-spacing: 0.05em; }
+        .btn-comic { border: 2px solid #000; box-shadow: 3px 3px 0px #000; transition: all 0.1s ease; }
+        .btn-comic:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
+    </style>
+</head>
+<body class="bg-neutral-950 min-h-screen flex flex-col justify-between">
+
+    <div id="login-container" class="flex-1 flex items-center justify-center p-4">
+        <div class="bg-neutral-900 border-2 border-red-900 max-w-sm w-full rounded-2xl p-5 md:p-6 space-y-6 shadow-2xl">
+            <div class="text-center space-y-1">
+                <img src="../logo.png" alt="Logo" class="h-12 mx-auto object-contain mb-2" onerror="this.onerror=null; this.src='https://placehold.co/60x60/dc2626/ffffff?text=FF';">
+                <h1 class="comic-title text-3xl text-red-500 tracking-wide">ADMIN<span class="text-white">LOGIN</span></h1>
+                <p class="text-neutral-400 text-3xs md:text-2xs">Otorisasi verifikasi data Sheet2 Cloud</p>
+            </div>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-2xs font-bold text-neutral-400 uppercase tracking-wider">Username</label>
+                    <input type="text" id="admin-user" required placeholder="Masukkan username" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-2xs font-bold text-neutral-400 uppercase tracking-wider">Password</label>
+                    <input type="password" id="admin-pass" required placeholder="••••••••" class="w-full bg-neutral-950 border border-neutral-800 px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                </div>
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl btn-comic border-black text-xs uppercase tracking-widest mt-2">
+                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Masuk Dashboard
+                </button>
+            </form>
+            <div class="text-center pt-1">
+                <a href="index.html" class="text-2xs md:text-xs text-neutral-500 hover:text-white transition-colors"><i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke List Jadwal</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard-container" class="hidden flex-1 flex flex-col">
+        <nav class="bg-neutral-900 border-b-4 border-red-800 px-4 md:px-8 py-3.5 flex justify-between items-center sticky top-0 z-40 shadow-md">
+            <div class="flex items-center gap-2">
+                <img src="../logo.png" alt="Logo" class="h-8 w-auto object-contain" onerror="this.onerror=null; this.src='https://placehold.co/30x30/dc2626/ffffff?text=FF';">
+                <span class="comic-title text-xl md:text-2xl text-red-500 tracking-wider">CONTROL<span class="text-white">PANEL</span></span>
+            </div>
+            <button onclick="handleLogout()" class="bg-red-600/10 hover:bg-red-600 text-red-400 hover:text-white text-3xs md:text-xs font-bold px-3 py-2 rounded-xl border border-red-500/20 transition-all">
+                <i class="fa-solid fa-power-off mr-1"></i> Keluar
+            </button>
+        </nav>
+
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-neutral-900 p-4 md:p-5 rounded-2xl border border-neutral-800">
+                <div class="space-y-0.5">
+                    <h3 class="text-base md:text-lg font-bold text-white flex items-center gap-2"><i class="fa-solid fa-database text-red-500"></i> Manajer Jadwal Free Fire Offline</h3>
+                    <p class="text-3xs md:text-xs text-neutral-400">Validasi status permohonan pendaftaran turnamen lokal Indramayu.</p>
+                </div>
+                <div class="flex gap-2 text-2xs w-full sm:w-auto">
+                    <div class="flex-1 sm:flex-initial bg-neutral-950 border border-neutral-800 px-4 py-2 rounded-xl text-amber-400 font-bold text-center">
+                        <span id="count-pending" class="block text-base md:text-lg">0</span> <span class="text-neutral-500 text-4xs uppercase tracking-wider block">Pending</span>
+                    </div>
+                    <div class="flex-1 sm:flex-initial bg-neutral-950 border border-neutral-800 px-4 py-2 rounded-xl text-emerald-400 font-bold text-center">
+                        <span id="count-approved" class="block text-base md:text-lg">0</span> <span class="text-neutral-500 text-4xs uppercase tracking-wider block">Aktif</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-neutral-900 border-2 border-neutral-800 rounded-2xl overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto w-full">
+                    <table class="w-full text-left text-xs md:text-sm min-w-[850px]">
+                        <thead class="bg-neutral-950 text-neutral-400 font-bold text-4xs uppercase tracking-widest border-b border-neutral-800">
+                            <tr>
+                                <th class="p-4">Nama Turnamen</th>
+                                <th class="p-4">Lokasi Offline</th>
+                                <th class="p-4">Tanggal Pelaksanaan</th>
+                                <th class="p-4">Hadiah & Slot</th>
+                                <th class="p-4">Kontak / WA</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-center">Aksi Manajemen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-neutral-800 text-neutral-300">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="edit-modal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-neutral-900 border-2 border-neutral-700 rounded-2xl max-w-md w-full p-5 md:p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center border-b border-neutral-800 pb-2">
+                <h3 class="comic-title text-xl md:text-2xl text-white tracking-wide"><i class="fa-solid fa-pen-to-square text-red-500"></i> KOREKSI DATA JADWAL</h3>
+                <button onclick="closeEditModal()" class="text-neutral-500 hover:text-white text-sm"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <input type="hidden" id="edit-id">
+            <div class="space-y-3">
+                <div>
+                    <label class="text-4xs font-bold text-neutral-400 uppercase block mb-1">Nama Turnamen</label>
+                    <input type="text" id="edit-title" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="text-4xs font-bold text-neutral-400 uppercase block mb-1">Lokasi Offline Match</label>
+                    <input type="text" id="edit-location" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-4xs font-bold text-neutral-400 uppercase block mb-1">Prizepool</label>
+                        <input type="text" id="edit-prize" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                    </div>
+                    <div>
+                        <label class="text-4xs font-bold text-neutral-400 uppercase block mb-1">Total Slot</label>
+                        <input type="number" id="edit-slots" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-4xs font-bold text-neutral-400 uppercase block mb-1">Tanggal</label>
+                    <input type="date" id="edit-date" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-3 py-2 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2 border-t border-neutral-800">
+                <button onclick="closeEditModal()" class="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 text-3xs font-bold rounded-xl text-neutral-300 transition-colors">Batal</button>
+                <button onclick="saveEditTournament()" class="px-5 py-2 bg-red-600 hover:bg-red-500 text-3xs font-bold rounded-xl text-white btn-comic border-black">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-neutral-950 text-center py-4 text-3xs md:text-xs text-neutral-600 border-t border-neutral-900 w-full mt-auto">
+        &copy; 2026 Free Fire Indramayu Hub. All Tournaments Are Offline Matches.
+    </footer>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4UcnlRuhCAAEV4-q4_s8--rwsPpYpaf97KgfLF8rU-ucNkEF_n94WJQ4AWwPLL3R8ZA/exec";
+        let tournaments = [];
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin mr-1"></i>Verifikasi...`;
+
+            const payload = {
+                action: "login",
+                username: document.getElementById('admin-user').value,
+                password: document.getElementById('admin-pass').value
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    sessionStorage.setItem('isAdminLoggedIn', 'true');
+                    showDashboard();
+                } else {
+                    alert(result.message || "Gagal! Kombinasi salah.");
+                }
+            } catch (error) {
+                console.error("Login Error:", error);
+                alert("Gangguan koneksi API Google Script.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fa-solid fa-right-to-bracket mr-1"></i> Masuk Dashboard`;
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('dashboard-container').classList.remove('hidden');
+            fetchMasterData();
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            window.location.reload();
+        }
+
+        async function fetchMasterData() {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-neutral-500 font-medium"><i class="fa-solid fa-circle-notch animate-spin text-lg text-red-600 mr-2"></i>Sinkronisasi Database...</td></tr>`;
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=read`);
+                const result = await response.json();
+                if(result.status === "success") {
+                    tournaments = result.data;
+                    renderAdminTable();
+                    updateCounters();
+                }
+            } catch(e) { 
+                console.error(e); 
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-red-500 font-bold"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Gagal memuat basis data.</td></tr>`;
+            }
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+
+            if (tournaments.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-neutral-500">Belum ada data turnamen apa pun di Sheet1.</td></tr>`;
+                return;
+            }
+
+            tournaments.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-neutral-900 transition-colors";
+                
+                const isApproved = t.status === 'Approved' || t.status === 'Aktif';
+                const statusBadge = isApproved 
+                    ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-4xs font-bold px-2 py-0.5 rounded">Approved</span>`
+                    : `<span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-4xs font-bold px-2 py-0.5 rounded">Pending</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-white max-w-xs truncate">${t.title}</td>
+                    <td class="p-4 text-xs text-neutral-400 font-semibold"><i class="fa-solid fa-location-dot text-red-500 mr-1"></i> ${t.location || 'Offline Match'}</td>
+                    <td class="p-4 text-xs text-neutral-400">${t.date ? new Date(t.date).toLocaleDateString('id-ID', {year:'numeric', month:'short', day:'numeric'}) : "-"}</td>
+                    <td class="p-4 text-xs">
+                        <div class="text-emerald-400 font-extrabold">${t.prize}</div>
+                        <div class="text-neutral-500 font-medium">${t.slots} Slots Maks</div>
+                    </td>
+                    <td class="p-4 text-xs truncate max-w-[150px]"><a href="${t.contact}" target="_blank" class="text-red-400 hover:underline"><i class="fa-solid fa-arrow-up-right-from-square mr-1 text-4xs"></i>Hubungi</a></td>
+                    <td class="p-4">${statusBadge}</td>
+                    <td class="p-4">
+                        <div class="flex gap-2 justify-center">
+                            ${!isApproved ? `<button onclick="approveTournament('${t.id}')" class="bg-emerald-600 text-white text-4xs font-bold px-2.5 py-1 rounded hover:bg-emerald-500 transition-colors"><i class="fa-solid fa-check"></i> ACC</button>` : ''}
+                            <button onclick="openEditModal('${t.id}')" class="bg-red-600 text-white text-4xs font-bold px-2.5 py-1 rounded hover:bg-red-500 transition-colors"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteTournament('${t.id}')" class="bg-neutral-800 text-neutral-400 text-4xs font-bold px-2.5 py-1 rounded hover:bg-neutral-700 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function approveTournament(id) {
+            if(!confirm("Apakah Anda yakin menyetujui jadwal turnamen ini?")) return;
+            try {
+                await fetch(SCRIPT_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ action: "updateStatus", id: id, status: "Approved" }) 
+                });
+                alert("Perintah ACC dikirim!");
+                setTimeout(fetchMasterData, 1500);
+            } catch(e) { alert("Gagal memperbarui status."); }
+        }
+
+        async function deleteTournament(id) {
+            if(!confirm("Hapus baris data secara permanen dari Sheet1?")) return;
+            try {
+                await fetch(SCRIPT_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ action: "delete", id: id }) 
+                });
+                alert("Perintah hapus sukses!");
+                setTimeout(fetchMasterData, 1500);
+            } catch(e) { alert("Gagal menghapus data."); }
+        }
+
+        function openEditModal(id) {
+            const tour = tournaments.find(t => String(t.id) === String(id));
+            if(tour) {
+                document.getElementById('edit-id').value = tour.id;
+                document.getElementById('edit-title').value = tour.title;
+                document.getElementById('edit-location').value = tour.location || '';
+                document.getElementById('edit-date').value = tour.date ? tour.date.split('T')[0] : "";
+                document.getElementById('edit-prize').value = tour.prize;
+                document.getElementById('edit-slots').value = tour.slots;
+                document.getElementById('edit-modal').classList.remove('hidden');
+            }
+        }
+        function closeEditModal() { document.getElementById('edit-modal').classList.add('hidden'); }
+
+        async function saveEditTournament() {
+            const updatedData = {
+                action: "edit",
+                id: document.getElementById('edit-id').value,
+                title: document.getElementById('edit-title').value,
+                location: document.getElementById('edit-location').value,
+                date: document.getElementById('edit-date').value,
+                prize: document.getElementById('edit-prize').value,
+                slots: parseInt(document.getElementById('edit-slots').value) || 0
+            };
+            try {
+                await fetch(SCRIPT_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(updatedData) 
+                });
+                alert("Perubahan berhasil disimpan!");
+                closeEditModal();
+                setTimeout(fetchMasterData, 1500);
+            } catch(e) { alert("Gagal menyimpan koreksi data."); }
+        }
+
+        function updateCounters() {
+            const pending = tournaments.filter(t => t.status !== 'Approved' && t.status !== 'Aktif').length;
+            const approved = tournaments.filter(t => t.status === 'Approved' || t.status === 'Aktif').length;
+            document.getElementById('count-pending').textContent = pending;
+            document.getElementById('count-approved').textContent = approved;
+        }
+
+        window.onload = function() {
+            if(sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                showDashboard();
+            }
+        };
+    </script>
+</body>
+</html>
