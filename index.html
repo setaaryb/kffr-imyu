@@ -6,99 +6,150 @@
     <title>INFORMASI TOURNAMENT OFFLINE FREE FIRE REGIONAL INDRAMAYU</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f0505; color: #f8fafc; }
-        .comic-title { font-family: 'Bangers', cursive; letter-spacing: 0.03em; }
-        .bento-card { background: #1a0b0b; border: 2px solid #3d1414; box-shadow: 4px 4px 0px #000000; transition: all 0.2s ease; }
-        .bento-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #dc2626; border-color: #dc2626; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0202; color: #f8fafc; }
+        .comic-title { font-family: 'Bangers', cursive; letter-spacing: 0.06em; }
+        .bento-card { background: #180d0d; border: 2px solid #361a1a; box-shadow: 4px 4px 0px #000000; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .bento-card:hover { transform: translate(-3px, -3px); border-color: #ef4444; }
         .btn-comic { border: 2px solid #000; box-shadow: 3px 3px 0px #000; transition: all 0.1s ease; }
         .btn-comic:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
+        .truncate-2-lines { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between">
+<body class="flex flex-col min-h-screen justify-between selection:bg-red-600 selection:text-white">
 
-    <nav class="bg-neutral-950 border-b-4 border-red-700 sticky top-0 z-50 px-4 py-3 md:py-4">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+    <nav class="bg-neutral-950 border-b-4 border-red-600 sticky top-0 z-50 px-4 py-4 shadow-xl">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <img src="logo.png" alt="Logo" class="h-10 w-auto object-contain max-h-12" onerror="this.onerror=null; this.src='https://placehold.co/150x50/dc2626/ffffff?text=LOGO+PNG';">
                 <span class="comic-title text-2xl md:text-3xl text-red-500 tracking-wider">KFFR <span class="text-white">INDRAMAYU</span></span>
             </div>
-            <div class="flex w-full sm:w-auto justify-center gap-1.5 bg-neutral-900 p-1.5 rounded-xl border border-neutral-800">
-                <button onclick="switchPage('home')" id="nav-home" class="flex-1 sm:flex-none text-center px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-bold bg-red-600 text-white transition-all">
-                    <i class="fa-solid fa-calendar-days mr-1.5"></i>Jadwal
+            
+            <div class="flex w-full md:w-auto justify-center gap-2 bg-neutral-900 p-1.5 rounded-xl border border-neutral-800">
+                <button onclick="switchPage('home')" id="nav-home" class="flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold bg-red-600 text-white transition-all btn-comic border-black">
+                    <i class="fa-solid fa-calendar-days mr-2"></i>Jadwal
                 </button>
-                <button onclick="switchPage('register')" id="nav-register" class="flex-1 sm:flex-none text-center px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-bold text-neutral-400 hover:text-white transition-all">
-                    <i class="fa-solid fa-clipboard-list mr-1.5"></i>Daftar
+                <button onclick="switchPage('register')" id="nav-register" class="flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold text-neutral-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-clipboard-list mr-2"></i>Daftar
                 </button>
-                <a href="admin" class="flex-1 sm:flex-none text-center px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-bold text-neutral-500 hover:text-red-400 transition-all">
-                    <i class="fa-solid fa-lock mr-1.5"></i>Admin
+                <button onclick="switchPage('community')" id="nav-community" class="flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold text-neutral-400 hover:text-white transition-all">
+                    <i class="fa-solid fa-users mr-2"></i>Komunitas
+                </button>
+                <a href="admin" class="text-center px-4 py-2.5 rounded-lg text-sm font-bold text-neutral-500 hover:text-red-400 transition-all border-l border-neutral-800 pl-3 flex items-center justify-center">
+                    <i class="fa-solid fa-lock"></i>
                 </a>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl w-full mx-auto px-4 py-6 flex-1">
+    <main class="max-w-7xl w-full mx-auto px-4 py-8 flex-1">
 
-        <section id="page-home" class="space-y-6">
-            <div class="w-full bg-neutral-900 p-3 md:p-4 rounded-xl border border-neutral-800 shadow-lg">
+        <section id="page-home" class="space-y-8">
+            <div class="w-full bg-neutral-900 p-5 rounded-2xl border border-neutral-800 shadow-lg">
                 <div class="relative w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-neutral-500 text-xs md:text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterTournaments()" placeholder="Cari nama turnamen atau lokasi offline..." class="w-full bg-neutral-950 border border-neutral-800 rounded-xl pl-11 pr-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600 placeholder-neutral-600">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-neutral-400 text-base"></i>
+                    <input type="text" id="search-input" oninput="filterTournaments()" placeholder="Cari turnamen atau lokasi offline di Indramayu..." class="w-full bg-neutral-950 border-2 border-neutral-800 rounded-xl pl-12 pr-4 py-3 text-sm md:text-base text-white focus:outline-none focus:border-red-500 placeholder-neutral-500 transition-all">
                 </div>
             </div>
-
-            <div id="tournament-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:grid-cols-2 md:gap-6"></div>
+            <div id="tournament-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
         <section id="page-register" class="hidden max-w-2xl mx-auto space-y-6 py-2">
-            <div class="text-center space-y-1">
-                <h2 class="comic-title text-3xl md:text-4xl text-white tracking-wide">AJUKAN TURNAMEN OFFLINE</h2>
-                <p class="text-neutral-400 text-xs md:text-sm">Masukkan detail turnamen Free Fire Anda untuk dipublikasikan.</p>
+            <div class="text-center space-y-2">
+                <h2 class="comic-title text-3xl md:text-5xl text-white tracking-wide">AJUKAN TURNAMEN OFFLINE</h2>
+                <p class="text-neutral-400 text-sm">Publikasikan turnamen Free Fire Anda agar masuk ke list reguler komunitas.</p>
             </div>
 
-            <form id="form-registrasi" onsubmit="handleRegistration(event)" class="bg-neutral-900 border-2 border-neutral-800 rounded-2xl p-5 md:p-8 space-y-4 md:space-y-5 shadow-2xl">
-                <div class="space-y-1">
-                    <label class="text-2xs md:text-xs font-bold text-neutral-400 uppercase tracking-wider">Nama Turnamen</label>
-                    <input type="text" id="reg-title" required placeholder="Contoh: Battle Indramayu" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+            <form id="form-registrasi" onsubmit="handleRegistration(event)" class="bg-neutral-900 border-2 border-neutral-800 rounded-2xl p-6 md:p-8 space-y-5 shadow-2xl">
+                <div class="space-y-2">
+                    <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Nama Turnamen</label>
+                    <input type="text" id="reg-title" required placeholder="Contoh: Battle Indramayu Season 1" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="text-2xs md:text-xs font-bold text-neutral-400 uppercase tracking-wider">Tanggal Pelaksanaan</label>
-                        <input type="date" id="reg-date" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                    <div class="space-y-2">
+                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Tanggal Pelaksanaan</label>
+                        <input type="date" id="reg-date" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
                     </div>
-                    <div class="space-y-1">
-                        <label class="text-2xs md:text-xs font-bold text-neutral-400 uppercase tracking-wider">Total Slot Tim</label>
-                        <input type="number" id="reg-slots" required placeholder="Contoh: 48" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                    <div class="space-y-2">
+                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Total Slot Tim</label>
+                        <input type="number" id="reg-slots" required placeholder="Contoh: 48" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="text-2xs md:text-xs font-bold text-neutral-400 uppercase tracking-wider">Total Hadiah (Prizepool)</label>
-                        <input type="text" id="reg-prize" required placeholder="Contoh: Rp 5.000.000" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                    <div class="space-y-2">
+                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Total Hadiah (Prizepool)</label>
+                        <input type="text" id="reg-prize" required placeholder="Contoh: Rp 5.000.000" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
                     </div>
-                    <div class="space-y-1">
-                        <label class="text-2xs md:text-xs font-bold text-neutral-400 uppercase tracking-wider">Lokasi Offline / Tempat</label>
-                        <input type="text" id="reg-location" required placeholder="Contoh: Gedung Juang Indramayu" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                    <div class="space-y-2">
+                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Lokasi Offline / Tempat</label>
+                        <input type="text" id="reg-location" required placeholder="Contoh: Gedung Juang Indramayu" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
                     </div>
                 </div>
 
-                <div class="space-y-1">
-                    <label class="text-2xs md:text-xs font-bold text-neutral-400 uppercase tracking-wider">Link Kontak / WhatsApp Pendaftaran</label>
-                    <input type="url" id="reg-contact" required placeholder="https://wa.me/628xxx" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-2.5 text-xs md:text-sm text-white focus:outline-none focus:border-red-600">
+                <div class="space-y-2">
+                    <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Link Kontak / WhatsApp Pendaftaran</label>
+                    <input type="url" id="reg-contact" required placeholder="https://wa.me/628xxx" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
                 </div>
 
-                <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs md:text-sm btn-comic border-black uppercase tracking-widest mt-2">
-                    <i class="fa-solid fa-paper-plane mr-2"></i>Kirim Pengajuan
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-extrabold py-3.5 rounded-xl text-sm btn-comic border-black uppercase tracking-widest mt-4">
+                    <i class="fa-solid fa-paper-plane mr-2"></i>Kirim Pengajuan Turnamen
                 </button>
             </form>
         </section>
+
+        <section id="page-community" class="hidden max-w-4xl mx-auto space-y-6 py-2">
+            <div class="text-center space-y-2">
+                <h2 class="comic-title text-3xl md:text-5xl text-white tracking-wide">HUB KFFR INDRAMAYU</h2>
+                <p class="text-neutral-400 text-sm">Masuk ke dalam ekosistem esports regional koordinasi resmi.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                
+                <div class="bento-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center rounded-xl text-2xl shadow-inner">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Grup WhatsApp Komunitas</h3>
+                        <p class="text-sm text-neutral-400 leading-relaxed">Pusat berkumpulnya player, kapten tim, dan pro-player Free Fire se-Indramayu. Info scrim, sparing, dan info tournament offline tercepat dibagikan di sini.</p>
+                    </div>
+                    <a href="https://chat.whatsapp.com/JnwT0dJaTTmBYIZadmDZKm" target="_blank" class="w-full block text-center bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl btn-comic border-black text-xs md:text-sm uppercase tracking-widest transition-all">
+                        <i class="fa-solid fa-right-to-bracket mr-2"></i> Masuk Grup WA
+                    </a>
+                </div>
+
+                <div class="bento-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
+                    <div class="space-y-3">
+                        <div class="w-12 h-12 bg-red-600/20 text-red-400 border border-red-500/30 flex items-center justify-center rounded-xl text-2xl shadow-inner">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Layanan Utama Admin KFFR</h3>
+                        <p class="text-sm text-neutral-400 leading-relaxed">Butuh bantuan validasi turnamen secara instan, pengaduan masalah turnamen di lapangan, atau kerja sama sponsor regional? Hubungi Hotline Admin.</p>
+                    </div>
+                    <a href="https://wa.me/+6282128777985" target="_blank" class="w-full block text-center bg-red-600 hover:bg-red-500 text-white font-extrabold py-3 rounded-xl btn-comic border-black text-xs md:text-sm uppercase tracking-widest transition-all">
+                        <i class="fa-brands fa-whatsapp mr-2"></i> Hubungi Customer Care
+                    </a>
+                </div>
+
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-neutral-950 text-center py-5 text-3xs md:text-xs text-neutral-600 border-t border-neutral-900 w-full mt-auto">
-        &copy; 2026 Free Fire Indramayu Hub. All Tournaments Are Offline Matches.
+    <footer class="bg-neutral-950 border-t-2 border-neutral-900 w-full mt-auto py-8 px-4 text-center space-y-4">
+        <div class="flex justify-center gap-4">
+            <a href="https://instagram.com/kff.indramayu" target="_blank" class="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-900 border-2 border-neutral-800 hover:border-red-600 px-4 py-2 rounded-xl text-neutral-400 hover:text-white transition-all shadow-[2px_2px_0px_#000] text-xs md:text-sm font-bold">
+                <i class="fa-brands fa-instagram text-base text-red-500"></i> @kff.indramayu
+            </a>
+            <a href="https://tiktok.com/@ff.indramayu" target="_blank" class="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-900 border-2 border-neutral-800 hover:border-red-600 px-4 py-2 rounded-xl text-neutral-400 hover:text-white transition-all shadow-[2px_2px_0px_#000] text-xs md:text-sm font-bold">
+                <i class="fa-brands fa-tiktok text-base text-red-500"></i> @ff.indramayu
+            </a>
+        </div>
+        <p class="text-xs text-neutral-500 tracking-wide">
+            &copy; 2026 Free Fire Indramayu Hub. All Tournaments Are Offline Matches.
+        </p>
     </footer>
 
     <script>
@@ -107,7 +158,7 @@
 
         async function fetchApprovedTournaments() {
             const grid = document.getElementById('tournament-grid');
-            grid.innerHTML = `<div class="col-span-full text-center py-16 text-neutral-500"><i class="fa-solid fa-circle-notch animate-spin text-2xl text-red-600 mb-3"></i><p class="text-xs">Menyelaraskan Roster Jadwal Offline...</p></div>`;
+            grid.innerHTML = `<div class="col-span-full text-center py-20 text-neutral-400"><i class="fa-solid fa-circle-notch animate-spin text-3xl text-red-500 mb-4"></i><p class="text-sm font-bold tracking-wide">Menyelaraskan Roster Jadwal Offline...</p></div>`;
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=read`);
                 const result = await response.json();
@@ -117,12 +168,18 @@
         }
 
         function switchPage(pageId) {
-            ['home', 'register'].forEach(p => {
-                document.getElementById(`page-${p}`).classList.add('hidden');
-                document.getElementById(`nav-${p}`).className = "flex-1 sm:flex-none text-center px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-bold text-neutral-400 hover:text-white transition-all";
+            ['home', 'register', 'community'].forEach(p => {
+                const element = document.getElementById(`page-${p}`);
+                const navBtn = document.getElementById(`nav-${p}`);
+                if (element) element.classList.add('hidden');
+                if (navBtn) navBtn.className = "flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold text-neutral-400 hover:text-white transition-all";
             });
             document.getElementById(`page-${pageId}`).classList.remove('hidden');
-            document.getElementById(`nav-${pageId}`).className = "flex-1 sm:flex-none text-center px-3 md:px-5 py-2 rounded-lg text-xs md:text-sm font-bold bg-red-600 text-white transition-all";
+            document.getElementById(`nav-${pageId}`).className = "flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold bg-red-600 text-white transition-all btn-comic border-black";
+        }
+
+        function filterTournaments() {
+            renderHomeGrid();
         }
 
         function formatDate(dateStr) {
@@ -142,35 +199,35 @@
             });
 
             if(filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-16 text-neutral-500 text-xs md:text-sm">Tidak ada jadwal turnamen offline Free Fire yang ditemukan.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-16 text-neutral-400 text-sm border-2 border-dashed border-neutral-800 rounded-2xl bg-neutral-900/30">Tidak ada jadwal turnamen offline Free Fire yang ditemukan.</div>`;
                 return;
             }
 
             filtered.forEach(t => {
                 const card = document.createElement('div');
-                card.className = "bento-card rounded-xl p-4 md:p-5 flex flex-col justify-between space-y-4";
+                card.className = "bento-card rounded-2xl p-5 flex flex-col justify-between space-y-5";
                 card.innerHTML = `
-                    <div class="space-y-2">
+                    <div class="space-y-3">
                         <div class="flex justify-between items-center gap-2">
-                            <span class="bg-red-600/20 text-red-400 border border-red-500/30 text-4xs font-black uppercase tracking-widest px-2 py-0.5 md:py-1 rounded">FREE FIRE</span>
-                            <div class="text-3xs md:text-xs text-neutral-400 font-medium whitespace-nowrap"><i class="fa-solid fa-calendar-day text-red-500 mr-1"></i> ${formatDate(t.date)}</div>
+                            <span class font-extrabold="bg-red-600/20 text-red-400 border border-red-500/30 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md">OFFLINE MATCH</span>
+                            <div class="text-xs text-neutral-300 font-semibold bg-neutral-950 px-2.5 py-1 rounded-md border border-neutral-800"><i class="fa-solid fa-calendar-day text-red-500 mr-1.5"></i>${formatDate(t.date)}</div>
                         </div>
-                        <h3 class="font-bold text-base md:text-lg text-white leading-snug pt-1 truncate-2-lines">${t.title}</h3>
-                        <p class="text-3xs md:text-xs text-neutral-400 flex items-start gap-1.5"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i> <span class="line-clamp-2">${t.location || 'Area Indramayu'}</span></p>
+                        <h3 class="font-extrabold text-lg text-white leading-snug pt-1 truncate-2-lines h-14">${t.title}</h3>
+                        <p class="text-sm text-neutral-400 flex items-start gap-2"><i class="fa-solid fa-location-dot text-red-500 mt-1 flex-shrink-0"></i> <span class="line-clamp-2 font-medium">${t.location || 'Area Indramayu'}</span></p>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 bg-neutral-950 p-2.5 md:p-3 text-3xs md:text-xs rounded-xl border border-neutral-800">
+                    <div class="grid grid-cols-2 gap-3 bg-neutral-950 p-3 text-sm rounded-xl border border-neutral-800 shadow-inner">
                         <div>
-                            <span class="text-neutral-500 block text-4xs uppercase tracking-wider font-bold">Total Hadiah</span>
-                            <span class="font-black text-emerald-400 text-xs md:text-sm">${t.prize}</span>
+                            <span class="text-neutral-500 block text-[10px] uppercase tracking-wider font-extrabold mb-0.5">Total Hadiah</span>
+                            <span class="font-extrabold text-emerald-400 text-sm md:text-base">${t.prize}</span>
                         </div>
                         <div>
-                            <span class="text-neutral-500 block text-4xs uppercase tracking-wider font-bold">Kapasitas Slot</span>
-                            <span class="font-bold text-white text-xs md:text-sm">${t.slots} Tim</span>
+                            <span class="text-neutral-500 block text-[10px] uppercase tracking-wider font-extrabold mb-0.5">Kapasitas Slot</span>
+                            <span class="font-bold text-white text-sm md:text-base">${t.slots} Tim</span>
                         </div>
                     </div>
                     <div class="pt-1">
-                        <a href="${t.contact}" target="_blank" class="w-full block text-center bg-red-600 hover:bg-red-500 text-white font-bold py-2 md:py-2.5 rounded-lg btn-comic border-black text-3xs md:text-xs uppercase tracking-widest">
-                            <i class="fa-brands fa-whatsapp mr-1 text-xs md:text-sm"></i> Hubungi Panitia
+                        <a href="${t.contact}" target="_blank" class="w-full block text-center bg-red-600 hover:bg-red-500 text-white font-extrabold py-2.5 rounded-xl btn-comic border-black text-xs md:text-sm uppercase tracking-widest transition-all">
+                            <i class="fa-brands fa-whatsapp mr-2 text-base"></i> Hubungi Panitia
                         </a>
                     </div>`;
                 grid.appendChild(card);
