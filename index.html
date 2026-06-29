@@ -3,275 +3,842 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFORMASI TOURNAMENT OFFLINE FREE FIRE REGIONAL INDRAMAYU</title>
+    <title>KFFR Indramayu – Turnamen Free Fire Offline</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0202; color: #f8fafc; }
-        .comic-title { font-family: 'Bangers', cursive; letter-spacing: 0.06em; }
-        .bento-card { background: #180d0d; border: 2px solid #361a1a; box-shadow: 4px 4px 0px #000000; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .bento-card:hover { transform: translate(-3px, -3px); border-color: #ef4444; }
-        .btn-comic { border: 2px solid #000; box-shadow: 3px 3px 0px #000; transition: all 0.1s ease; }
-        .btn-comic:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
-        .truncate-2-lines { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        :root {
+            --red:    #ef4444;
+            --red-dk: #b91c1c;
+            --bg:     #09090b;
+            --card:   #111113;
+            --border: #27272a;
+            --muted:  #71717a;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: #f4f4f5; margin:0; }
+        .comic-title { font-family: 'Bangers', cursive; letter-spacing: 0.07em; line-height:1; }
+
+        /* ── NAV ── */
+        .nav-pill { display:flex; gap:4px; background:#18181b; border:1px solid var(--border); border-radius:14px; padding:4px; }
+        .nav-btn   { padding:8px 18px; border-radius:10px; font-size:13px; font-weight:700; color:var(--muted); border:none; background:transparent; cursor:pointer; transition:all .18s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+        .nav-btn:hover { color:#fff; }
+        .nav-btn.active { background:var(--red); color:#fff; box-shadow:0 2px 10px #ef444440; }
+
+        /* ── CARDS ── */
+        .tour-card { background:var(--card); border:1px solid var(--border); border-radius:18px; overflow:hidden; display:flex; flex-direction:column; transition:transform .2s, border-color .2s, box-shadow .2s; }
+        .tour-card:hover { transform:translateY(-4px); border-color:#ef444455; box-shadow:0 8px 32px #ef444415; }
+        .tour-card-img { width:100%; height:140px; object-fit:cover; background:#1c1c1e; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:13px; border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+        .tour-card-img-placeholder { width:100%; height:140px; background:linear-gradient(135deg,#1c1c1e 60%,#2a1010); display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--border); }
+        .status-badge { position:absolute; top:10px; right:10px; font-size:10px; font-weight:800; padding:3px 9px; border-radius:99px; text-transform:uppercase; letter-spacing:.05em; }
+        .badge-live  { background:#ef4444; color:#fff; }
+        .badge-soon  { background:#f59e0b22; color:#fbbf24; border:1px solid #f59e0b44; }
+
+        /* ── BENTO (community) ── */
+        .bento { background:var(--card); border:1px solid var(--border); border-radius:18px; transition:border-color .2s, transform .2s; }
+        .bento:hover { border-color:#ef444455; transform:translateY(-3px); }
+
+        /* ── BUTTONS ── */
+        .btn-red   { background:var(--red); color:#fff; font-weight:800; border:none; border-radius:12px; padding:11px 20px; cursor:pointer; transition:background .15s, transform .1s; font-size:13px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+        .btn-red:hover   { background:#dc2626; }
+        .btn-red:active  { transform:scale(.97); }
+        .btn-green { background:#059669; color:#fff; font-weight:800; border:none; border-radius:12px; padding:11px 20px; cursor:pointer; transition:background .15s; font-size:13px; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+        .btn-green:hover { background:#047857; }
+
+        /* ── FORM ── */
+        .field-input { width:100%; background:#09090b; border:1px solid var(--border); border-radius:12px; padding:11px 14px; color:#f4f4f5; font-size:14px; outline:none; transition:border-color .2s; font-family:inherit; }
+        .field-input:focus { border-color:var(--red); }
+        .field-input::placeholder { color:var(--muted); }
+        .field-label { font-size:11px; font-weight:800; color:#a1a1aa; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:6px; }
+
+        /* ── TOAST ── */
+        #toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#18181b; border:1px solid var(--border); color:#f4f4f5; padding:12px 22px; border-radius:14px; font-size:13px; font-weight:700; z-index:999; opacity:0; transition:all .35s cubic-bezier(.2,.8,.3,1); pointer-events:none; display:flex; align-items:center; gap:10px; box-shadow:0 8px 32px #0009; }
+        #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+        #toast .toast-icon { font-size:16px; }
+
+        /* ── LOADING SHIMMER ── */
+        .shimmer { background:linear-gradient(90deg,#18181b 25%,#27272a 50%,#18181b 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:10px; }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+        /* ── SEARCH ── */
+        .search-wrap { position:relative; }
+        .search-wrap input { padding-left:44px; }
+        .search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; font-size:15px; }
+        .filter-chip { padding:7px 14px; border-radius:99px; font-size:12px; font-weight:700; border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer; transition:all .15s; }
+        .filter-chip.active, .filter-chip:hover { border-color:var(--red); color:#fff; background:#ef444415; }
+
+        /* ── COUNTDOWN ── */
+        .countdown-box { display:flex; gap:8px; align-items:center; }
+        .cd-unit { text-align:center; }
+        .cd-val { font-size:20px; font-weight:900; color:#fff; font-family:'Bangers',cursive; letter-spacing:.05em; line-height:1; }
+        .cd-lbl { font-size:9px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.07em; }
+        .cd-sep  { color:var(--red); font-weight:900; font-size:18px; margin-bottom:12px; }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width:640px){
+            .nav-btn span.label-text { display:none; }
+            .nav-btn { padding:9px 14px; }
+        }
+        .page { display:none; }
+        .page.active { display:block; }
+
+        /* ── HERO BANNER ── */
+        .hero-banner { background:linear-gradient(135deg,#1a0505 0%,#0d0d0d 60%,#0b0d16 100%); border:1px solid var(--border); border-radius:20px; padding:32px 28px; position:relative; overflow:hidden; }
+        .hero-banner::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:radial-gradient(circle,#ef444425 0%,transparent 70%); pointer-events:none; }
+        .hero-banner::after  { content:''; position:absolute; bottom:-30px; left:20px; width:140px; height:140px; background:radial-gradient(circle,#ef444410 0%,transparent 70%); pointer-events:none; }
+
+        /* ── MODAL ── */
+        .modal-overlay { position:fixed; inset:0; background:#00000099; backdrop-filter:blur(6px); z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; opacity:0; pointer-events:none; transition:opacity .25s; }
+        .modal-overlay.open { opacity:1; pointer-events:all; }
+        .modal-box { background:#18181b; border:1px solid #3f3f46; border-radius:20px; max-width:480px; width:100%; padding:28px; max-height:90vh; overflow-y:auto; transform:scale(.95); transition:transform .25s; }
+        .modal-overlay.open .modal-box { transform:scale(1); }
+
+        input[type=date]::-webkit-calendar-picker-indicator { filter:invert(1) opacity(.4); cursor:pointer; }
+
+        .empty-state { text-align:center; padding:64px 24px; color:var(--muted); }
+        .empty-state i { font-size:48px; margin-bottom:16px; display:block; opacity:.3; }
+
+        /* scroll top btn */
+        #scroll-top { position:fixed; bottom:24px; right:24px; width:44px; height:44px; background:var(--red); color:#fff; border:none; border-radius:50%; cursor:pointer; font-size:16px; box-shadow:0 4px 16px #ef444440; opacity:0; transition:opacity .3s; z-index:50; }
+        #scroll-top.visible { opacity:1; }
+
+        /* ── BANNER SLIDER ── */
+        .banner-slider { position:relative; width:100%; aspect-ratio:16/9; border-radius:18px; overflow:hidden; background:#0d0d0f; margin-bottom:24px; }
+        .banner-slides { display:flex; height:100%; transition:transform .6s cubic-bezier(.4,0,.2,1); will-change:transform; }
+        .banner-slide { min-width:100%; height:100%; position:relative; flex-shrink:0; }
+        .banner-slide img { width:100%; height:100%; object-fit:cover; display:block; }
+        .banner-slide-placeholder { width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; color:var(--muted); }
+        .slide-overlay { position:absolute; inset:0; background:linear-gradient(to top,#09090bcc 0%,transparent 55%); pointer-events:none; }
+        .slide-caption { position:absolute; bottom:0; left:0; right:0; padding:20px 24px; z-index:2; }
+        .slide-caption h3 { font-family:'Bangers',cursive; font-size:clamp(16px,3.5vw,28px); letter-spacing:.06em; color:#fff; margin:0 0 4px; text-shadow:0 2px 8px #0008; }
+        .slide-caption p  { font-size:clamp(11px,2vw,13px); color:#e4e4e7cc; font-weight:600; margin:0; }
+        /* dots */
+        .slider-dots { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:10; }
+        .slider-dot  { width:6px; height:6px; border-radius:99px; background:#ffffff55; cursor:pointer; transition:all .3s; border:none; padding:0; }
+        .slider-dot.active { width:24px; background:#ef4444; }
+        /* arrows */
+        .slider-arrow { position:absolute; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; background:#00000088; border:1px solid #ffffff22; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; z-index:10; transition:background .2s; backdrop-filter:blur(4px); }
+        .slider-arrow:hover { background:#ef4444cc; }
+        .slider-arrow.prev { left:12px; }
+        .slider-arrow.next { right:12px; }
+        /* progress bar */
+        .slider-progress { position:absolute; top:0; left:0; height:3px; background:#ef4444; z-index:10; border-radius:0 2px 2px 0; transition:width linear; }
+
+        /* ── EXTRA RESPONSIVE ── */
+        @media(max-width:480px){
+            .tour-card-img, .tour-card-img-placeholder { height:120px; }
+            .modal-box { padding:20px 16px; }
+            .hero-banner { padding:22px 16px; }
+            #tournament-grid { grid-template-columns:1fr !important; }
+        }
+        @media(max-width:640px){
+            .bento-grid-community { grid-template-columns:1fr !important; }
+            .form-grid-2col { grid-template-columns:1fr !important; }
+            .slide-caption { padding:14px 16px; }
+        }
+        @media(max-width:768px){
+            main { padding:16px 12px 60px !important; }
+            .nav-pill { gap:2px; }
+        }
     </style>
 </head>
-<body class="flex flex-col min-h-screen justify-between selection:bg-red-600 selection:text-white">
+<body>
 
-    <nav class="bg-neutral-950 border-b-4 border-red-600 sticky top-0 z-50 px-4 py-4 shadow-xl">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <img src="logo.png" alt="Logo" class="h-10 w-auto object-contain max-h-12" onerror="this.onerror=null; this.src='https://placehold.co/150x50/dc2626/ffffff?text=LOGO+PNG';">
-                <span class="comic-title text-2xl md:text-3xl text-red-500 tracking-wider">KFFR <span class="text-white">INDRAMAYU</span></span>
-            </div>
-            
-            <div class="flex w-full md:w-auto justify-center gap-2 bg-neutral-900 p-1.5 rounded-xl border border-neutral-800">
-                <button onclick="switchPage('home')" id="nav-home" class="flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold bg-red-600 text-white transition-all btn-comic border-black">
-                    <i class="fa-solid fa-calendar-days mr-2"></i>Jadwal
-                </button>
-                <button onclick="switchPage('register')" id="nav-register" class="flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold text-neutral-400 hover:text-white transition-all">
-                    <i class="fa-solid fa-clipboard-list mr-2"></i>Daftar
-                </button>
-                <button onclick="switchPage('community')" id="nav-community" class="flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold text-neutral-400 hover:text-white transition-all">
-                    <i class="fa-solid fa-users mr-2"></i>Komunitas
-                </button>
-                <a href="admin" class="text-center px-4 py-2.5 rounded-lg text-sm font-bold text-neutral-500 hover:text-red-400 transition-all border-l border-neutral-800 pl-3 flex items-center justify-center">
-                    <i class="fa-solid fa-lock"></i>
-                </a>
+<!-- NAV -->
+<nav style="background:#0d0d0f;border-bottom:1px solid #27272a;position:sticky;top:0;z-index:100;padding:10px 16px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+            <img src="logo.png" alt="Logo" style="height:32px;object-fit:contain;" onerror="this.src='https://placehold.co/100x36/ef4444/fff?text=KFFR'">
+            <div>
+                <div class="comic-title" style="font-size:20px;color:#ef4444;">KFFR <span style="color:#fff;">INDRAMAYU</span></div>
+                <div style="font-size:9px;color:#71717a;font-weight:700;letter-spacing:.05em;text-transform:uppercase;">Komunitas Regional Resmi</div>
             </div>
         </div>
-    </nav>
-
-    <main class="max-w-7xl w-full mx-auto px-4 py-8 flex-1">
-
-        <section id="page-home" class="space-y-8">
-            <div class="w-full bg-neutral-900 p-5 rounded-2xl border border-neutral-800 shadow-lg">
-                <div class="relative w-full">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-4 text-neutral-400 text-base"></i>
-                    <input type="text" id="search-input" oninput="filterTournaments()" placeholder="Cari turnamen atau lokasi offline di Indramayu..." class="w-full bg-neutral-950 border-2 border-neutral-800 rounded-xl pl-12 pr-4 py-3 text-sm md:text-base text-white focus:outline-none focus:border-red-500 placeholder-neutral-500 transition-all">
-                </div>
-            </div>
-            <div id="tournament-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
-
-        <section id="page-register" class="hidden max-w-2xl mx-auto space-y-6 py-2">
-            <div class="text-center space-y-2">
-                <h2 class="comic-title text-3xl md:text-5xl text-white tracking-wide">AJUKAN TURNAMEN OFFLINE</h2>
-                <p class="text-neutral-400 text-sm">Publikasikan turnamen Free Fire Anda agar masuk ke list reguler komunitas.</p>
-            </div>
-
-            <form id="form-registrasi" onsubmit="handleRegistration(event)" class="bg-neutral-900 border-2 border-neutral-800 rounded-2xl p-6 md:p-8 space-y-5 shadow-2xl">
-                <div class="space-y-2">
-                    <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Nama Turnamen</label>
-                    <input type="text" id="reg-title" required placeholder="Contoh: Battle Indramayu Season 1" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Tanggal Pelaksanaan</label>
-                        <input type="date" id="reg-date" required class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Total Slot Tim</label>
-                        <input type="number" id="reg-slots" required placeholder="Contoh: 48" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Total Hadiah (Prizepool)</label>
-                        <input type="text" id="reg-prize" required placeholder="Contoh: Rp 5.000.000" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Lokasi Offline / Tempat</label>
-                        <input type="text" id="reg-location" required placeholder="Contoh: Gedung Juang Indramayu" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-xs font-extrabold text-neutral-300 uppercase tracking-wider">Link Kontak / WhatsApp Pendaftaran</label>
-                    <input type="url" id="reg-contact" required placeholder="https://wa.me/628xxx" class="w-full bg-neutral-950 border border-neutral-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500">
-                </div>
-
-                <button type="submit" class="w-full bg-red-600 hover:bg-red-500 text-white font-extrabold py-3.5 rounded-xl text-sm btn-comic border-black uppercase tracking-widest mt-4">
-                    <i class="fa-solid fa-paper-plane mr-2"></i>Kirim Pengajuan Turnamen
+        <div style="display:flex;align-items:center;gap:6px;">
+            <div class="nav-pill">
+                <button class="nav-btn active" id="nav-home" onclick="switchPage('home')">
+                    <i class="fa-solid fa-calendar-days"></i><span class="label-text">Jadwal</span>
                 </button>
+                <button class="nav-btn" id="nav-register" onclick="switchPage('register')">
+                    <i class="fa-solid fa-clipboard-list"></i><span class="label-text">Daftar</span>
+                </button>
+                <button class="nav-btn" id="nav-community" onclick="switchPage('community')">
+                    <i class="fa-solid fa-users"></i><span class="label-text">Komunitas</span>
+                </button>
+            </div>
+            <a href="admin" style="padding:8px 10px;border-radius:10px;color:#52525b;display:flex;align-items:center;font-size:13px;border-left:1px solid var(--border);margin-left:2px;text-decoration:none;transition:color .15s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#52525b'">
+                <i class="fa-solid fa-lock"></i>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main style="max-width:1200px;margin:0 auto;padding:24px 20px 60px;">
+
+    <!-- ═══ PAGE: HOME ═══ -->
+    <div id="page-home" class="page active">
+
+        <!-- ═══ BANNER SLIDER 16:9 ═══ -->
+        <div class="banner-slider" id="banner-slider">
+            <!-- Progress bar -->
+            <div class="slider-progress" id="slider-progress"></div>
+
+            <!-- Slides -->
+            <div class="banner-slides" id="banner-slides">
+
+                <!-- Slide 1: Hero Utama -->
+                <div class="banner-slide">
+                    <img src="banner.png" alt="Banner 1" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <div class="banner-slide-placeholder" style="display:none;background:linear-gradient(135deg,#1a0505 0%,#0d0d0d 60%,#0b0d16 100%);">
+                        <i class="fa-solid fa-fire-flame-curved" style="font-size:52px;color:#ef4444;"></i>
+                    </div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-caption">
+                        <h3>KFFR INDRAMAYU</h3>
+                        <p>Platform turnamen Free Fire offline terpercaya se-Indramayu</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Jadwal Turnamen -->
+                <div class="banner-slide">
+                    <img src="banner.png" alt="Banner 2" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <div class="banner-slide-placeholder" style="display:none;background:linear-gradient(135deg,#060d1a 0%,#0d0d0d 60%,#0a0505 100%);">
+                        <i class="fa-solid fa-calendar-days" style="font-size:52px;color:#ef4444;"></i>
+                    </div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-caption">
+                        <h3>JADWAL TURNAMEN RESMI 2026</h3>
+                        <p>Cek jadwal terbaru dan daftarkan tim kamu sekarang</p>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Komunitas -->
+                <div class="banner-slide">
+                    <img src="banner.png" alt="Banner 3" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <div class="banner-slide-placeholder" style="display:none;background:linear-gradient(135deg,#0a0d06 0%,#0d0d0d 60%,#060a16 100%);">
+                        <i class="fa-solid fa-users" style="font-size:52px;color:#ef4444;"></i>
+                    </div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-caption">
+                        <h3>KOMUNITAS FF INDRAMAYU</h3>
+                        <p>Ribuan gamer bergabung — scrim, sparing, dan info turnamen</p>
+                    </div>
+                </div>
+
+                <!-- Slide 4: Countdown / Prizepool -->
+                <div class="banner-slide">
+                    <img src="banner.png" alt="Banner 4" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <div class="banner-slide-placeholder" style="display:none;background:linear-gradient(135deg,#1a0a00 0%,#0d0d0d 60%,#00100a 100%);">
+                        <i class="fa-solid fa-trophy" style="font-size:52px;color:#f59e0b;"></i>
+                    </div>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-caption">
+                        <h3>TOTAL PRIZEPOOL JUTAAN RUPIAH</h3>
+                        <p>Daftar sekarang dan buktikan kemampuan tim kamu!</p>
+                    </div>
+                </div>
+
+            </div><!-- /banner-slides -->
+
+            <!-- Arrows -->
+            <button class="slider-arrow prev" onclick="sliderMove(-1)" aria-label="Sebelumnya">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="slider-arrow next" onclick="sliderMove(1)" aria-label="Berikutnya">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <!-- Dots -->
+            <div class="slider-dots" id="slider-dots"></div>
+        </div>
+
+        <!-- Countdown Bar (tampil di bawah slider) -->
+        <div id="next-tournament-countdown" style="display:none;margin-bottom:20px;">
+            <div class="bento" style="padding:16px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between;">
+                <div>
+                    <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;"><i class="fa-regular fa-clock" style="color:#ef4444;margin-right:5px;"></i>Turnamen Berikutnya</div>
+                    <div style="font-size:14px;font-weight:700;color:#fff;" id="next-name">–</div>
+                </div>
+                <div class="countdown-box" id="countdown-display">
+                    <div class="cd-unit"><div class="cd-val" id="cd-days">00</div><div class="cd-lbl">Hari</div></div>
+                    <div class="cd-sep">:</div>
+                    <div class="cd-unit"><div class="cd-val" id="cd-hours">00</div><div class="cd-lbl">Jam</div></div>
+                    <div class="cd-sep">:</div>
+                    <div class="cd-unit"><div class="cd-val" id="cd-mins">00</div><div class="cd-lbl">Menit</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px;">
+            <div class="search-wrap" style="flex:1;min-width:200px;">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="search-input" class="field-input" placeholder="Cari turnamen atau lokasi..." oninput="renderHomeGrid()">
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="filter-chip active" data-filter="all" onclick="setFilter(this,'all')">Semua</button>
+                <button class="filter-chip" data-filter="upcoming" onclick="setFilter(this,'upcoming')">Mendatang</button>
+                <button class="filter-chip" data-filter="past" onclick="setFilter(this,'past')">Selesai</button>
+            </div>
+            <div style="font-size:12px;color:var(--muted);font-weight:600;" id="result-count"></div>
+        </div>
+
+        <!-- Grid -->
+        <div id="tournament-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;"></div>
+    </div>
+
+    <!-- ═══ PAGE: REGISTER ═══ -->
+    <div id="page-register" class="page">
+        <div style="max-width:640px;margin:0 auto;">
+            <div style="text-align:center;margin-bottom:28px;">
+                <h2 class="comic-title" style="font-size:clamp(26px,5vw,44px);color:#fff;margin:0 0 8px;">AJUKAN TURNAMEN</h2>
+                <p style="color:var(--muted);font-size:14px;">Daftarkan turnamen offline kamu — admin akan mereview dalam 24 jam.</p>
+            </div>
+
+            <!-- Stepper indicator -->
+            <div style="display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px;">
+                <div class="step-dot" id="dot-1" style="width:32px;height:32px;border-radius:50%;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;">1</div>
+                <div style="flex:1;max-width:80px;height:2px;background:#27272a;"></div>
+                <div class="step-dot" id="dot-2" style="width:32px;height:32px;border-radius:50%;background:#27272a;color:#71717a;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;">2</div>
+                <div style="flex:1;max-width:80px;height:2px;background:#27272a;"></div>
+                <div class="step-dot" id="dot-3" style="width:32px;height:32px;border-radius:50%;background:#27272a;color:#71717a;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;"><i class="fa-solid fa-check" style="font-size:12px;"></i></div>
+            </div>
+
+            <form id="form-registrasi" onsubmit="handleRegistration(event)" style="background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;">
+
+                <!-- Step 1 -->
+                <div id="step-1">
+                    <h3 style="font-size:14px;font-weight:800;color:#a1a1aa;text-transform:uppercase;letter-spacing:.06em;margin:0 0 20px;"><i class="fa-solid fa-trophy" style="color:#ef4444;margin-right:8px;"></i>Info Turnamen</h3>
+                    <div style="margin-bottom:16px;">
+                        <label class="field-label">Nama Turnamen *</label>
+                        <input type="text" id="reg-title" required class="field-input" placeholder="Contoh: Battle Indramayu Season 3">
+                    </div>
+                    <div class="form-grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                        <div>
+                            <label class="field-label">Tanggal Pelaksanaan *</label>
+                            <input type="date" id="reg-date" required class="field-input">
+                        </div>
+                        <div>
+                            <label class="field-label">Total Slot Tim *</label>
+                            <input type="number" id="reg-slots" required class="field-input" placeholder="Contoh: 48" min="2">
+                        </div>
+                    </div>
+                    <div class="form-grid-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div>
+                            <label class="field-label">Total Hadiah (Prizepool) *</label>
+                            <input type="text" id="reg-prize" required class="field-input" placeholder="Rp 5.000.000">
+                        </div>
+                        <div>
+                            <label class="field-label">Lokasi / Tempat *</label>
+                            <input type="text" id="reg-location" required class="field-input" placeholder="Gedung Juang Indramayu">
+                        </div>
+                    </div>
+                    <div style="margin-top:24px;display:flex;justify-content:flex-end;">
+                        <button type="button" onclick="goStep(2)" class="btn-red">Lanjut <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div id="step-2" style="display:none;">
+                    <h3 style="font-size:14px;font-weight:800;color:#a1a1aa;text-transform:uppercase;letter-spacing:.06em;margin:0 0 20px;"><i class="fa-solid fa-address-card" style="color:#ef4444;margin-right:8px;"></i>Info Kontak Panitia</h3>
+                    <div style="margin-bottom:16px;">
+                        <label class="field-label">Nama Penyelenggara / PIC *</label>
+                        <input type="text" id="reg-organizer" required class="field-input" placeholder="Nama panitia utama">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label class="field-label">Link WhatsApp Pendaftaran *</label>
+                        <input type="url" id="reg-contact" required class="field-input" placeholder="https://wa.me/628xxx">
+                        <div style="font-size:11px;color:var(--muted);margin-top:5px;"><i class="fa-solid fa-circle-info" style="margin-right:4px;"></i>Format: https://wa.me/62812xxxxxxx atau link grup WA</div>
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label class="field-label">Biaya Pendaftaran (opsional)</label>
+                        <input type="text" id="reg-fee" class="field-input" placeholder="Gratis / Rp 50.000 per tim">
+                    </div>
+                    <div style="margin-bottom:16px;">
+                        <label class="field-label">Catatan Tambahan (opsional)</label>
+                        <textarea id="reg-notes" class="field-input" rows="3" placeholder="Syarat peserta, peraturan khusus, dll..." style="resize:vertical;"></textarea>
+                    </div>
+                    <div style="margin-top:24px;display:flex;justify-content:space-between;gap:10px;">
+                        <button type="button" onclick="goStep(1)" style="padding:11px 20px;border-radius:12px;font-weight:800;font-size:13px;background:#27272a;color:#a1a1aa;border:none;cursor:pointer;">
+                            <i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i> Kembali
+                        </button>
+                        <button type="submit" class="btn-red" id="submit-btn">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan
+                        </button>
+                    </div>
+                </div>
             </form>
-        </section>
 
-        <section id="page-community" class="hidden max-w-4xl mx-auto space-y-6 py-2">
-            <div class="text-center space-y-2">
-                <h2 class="comic-title text-3xl md:text-5xl text-white tracking-wide">HUB KFFR INDRAMAYU</h2>
-                <p class="text-neutral-400 text-sm">Masuk ke dalam ekosistem esports regional koordinasi resmi.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
-                
-                <div class="bento-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
-                    <div class="space-y-3">
-                        <div class="w-12 h-12 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center rounded-xl text-2xl shadow-inner">
-                            <i class="fa-brands fa-whatsapp"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white">Grup WhatsApp Komunitas</h3>
-                        <p class="text-sm text-neutral-400 leading-relaxed">Pusat berkumpulnya player, kapten tim, dan pro-player Free Fire se-Indramayu. Info scrim, sparing, dan info tournament offline tercepat dibagikan di sini.</p>
-                    </div>
-                    <a href="https://chat.whatsapp.com/JnwT0dJaTTmBYIZadmDZKm" target="_blank" class="w-full block text-center bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl btn-comic border-black text-xs md:text-sm uppercase tracking-widest transition-all">
-                        <i class="fa-solid fa-right-to-bracket mr-2"></i> Masuk Grup WA
-                    </a>
+            <!-- Tips -->
+            <div style="background:#ef444408;border:1px solid #ef444422;border-radius:14px;padding:16px 18px;margin-top:16px;display:flex;gap:12px;align-items:flex-start;">
+                <i class="fa-solid fa-lightbulb" style="color:#fbbf24;margin-top:2px;flex-shrink:0;"></i>
+                <div style="font-size:13px;color:#a1a1aa;line-height:1.6;">
+                    Pengajuan akan ditinjau admin dalam <strong style="color:#fff;">1×24 jam</strong>. Pastikan data yang diisi sudah benar sebelum mengirim. Untuk perubahan data setelah pengajuan, hubungi Admin KFFR.
                 </div>
-
-                <div class="bento-card rounded-2xl p-6 flex flex-col justify-between space-y-6">
-                    <div class="space-y-3">
-                        <div class="w-12 h-12 bg-red-600/20 text-red-400 border border-red-500/30 flex items-center justify-center rounded-xl text-2xl shadow-inner">
-                            <i class="fa-solid fa-user-shield"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white">Layanan Utama Admin KFFR</h3>
-                        <p class="text-sm text-neutral-400 leading-relaxed">Butuh bantuan validasi turnamen secara instan, pengaduan masalah turnamen di lapangan, atau kerja sama sponsor regional? Hubungi Hotline Admin.</p>
-                    </div>
-                    <a href="https://wa.me/+6282128777985" target="_blank" class="w-full block text-center bg-red-600 hover:bg-red-500 text-white font-extrabold py-3 rounded-xl btn-comic border-black text-xs md:text-sm uppercase tracking-widest transition-all">
-                        <i class="fa-brands fa-whatsapp mr-2"></i> Hubungi Customer Care
-                    </a>
-                </div>
-
             </div>
-        </section>
-    </main>
-
-    <footer class="bg-neutral-950 border-t-2 border-neutral-900 w-full mt-auto py-8 px-4 text-center space-y-4">
-        <div class="flex justify-center gap-4">
-            <a href="https://instagram.com/kff.indramayu" target="_blank" class="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-900 border-2 border-neutral-800 hover:border-red-600 px-4 py-2 rounded-xl text-neutral-400 hover:text-white transition-all shadow-[2px_2px_0px_#000] text-xs md:text-sm font-bold">
-                <i class="fa-brands fa-instagram text-base text-red-500"></i> @kff.indramayu
-            </a>
-            <a href="https://tiktok.com/@ff.indramayu" target="_blank" class="flex items-center gap-2 bg-neutral-900 hover:bg-neutral-900 border-2 border-neutral-800 hover:border-red-600 px-4 py-2 rounded-xl text-neutral-400 hover:text-white transition-all shadow-[2px_2px_0px_#000] text-xs md:text-sm font-bold">
-                <i class="fa-brands fa-tiktok text-base text-red-500"></i> @ff.indramayu
-            </a>
         </div>
-        <p class="text-xs text-neutral-500 tracking-wide">
-            &copy; 2026 Free Fire Indramayu Hub. All Tournaments Are Offline Matches.
-        </p>
-    </footer>
+    </div>
 
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4UcnlRuhCAAEV4-q4_s8--rwsPpYpaf97KgfLF8rU-ucNkEF_n94WJQ4AWwPLL3R8ZA/exec";
-        let tournaments = [];
+    <!-- ═══ PAGE: COMMUNITY ═══ -->
+    <div id="page-community" class="page">
+        <div style="max-width:800px;margin:0 auto;">
+            <div style="text-align:center;margin-bottom:32px;">
+                <h2 class="comic-title" style="font-size:clamp(26px,5vw,44px);color:#fff;margin:0 0 8px;">HUB KFFR <span style="color:#ef4444;">INDRAMAYU</span></h2>
+                <p style="color:var(--muted);font-size:14px;">Bergabung ke ekosistem esports Free Fire regional yang terorganisir.</p>
+            </div>
 
-        async function fetchApprovedTournaments() {
-            const grid = document.getElementById('tournament-grid');
-            grid.innerHTML = `<div class="col-span-full text-center py-20 text-neutral-400"><i class="fa-solid fa-circle-notch animate-spin text-3xl text-red-500 mb-4"></i><p class="text-sm font-bold tracking-wide">Menyelaraskan Roster Jadwal Offline...</p></div>`;
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=read`);
-                const result = await response.json();
-                if (result.status === "success") tournaments = result.data;
-            } catch (error) { console.error(error); }
-            renderHomeGrid();
+            <div class="bento-grid-community" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px;">
+
+                <!-- WA Group -->
+                <div class="bento" style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+                    <div style="width:48px;height:48px;background:#059669;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size:16px;font-weight:800;color:#fff;margin:0 0 6px;">Grup WhatsApp</h3>
+                        <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">Pusat info scrim, sparing, dan pengumuman turnamen offline terbaru se-Indramayu.</p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#71717a;">
+                        <i class="fa-solid fa-circle" style="color:#22c55e;font-size:8px;"></i> Aktif · Ribuan anggota
+                    </div>
+                    <a href="https://chat.whatsapp.com/JnwT0dJaTTmBYIZadmDZKm" target="_blank" class="btn-green" style="justify-content:center;">
+                        <i class="fa-solid fa-right-to-bracket"></i> Gabung Grup WA
+                    </a>
+                </div>
+
+                <!-- Admin Contact -->
+                <div class="bento" style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+                    <div style="width:48px;height:48px;background:#ef4444;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size:16px;font-weight:800;color:#fff;margin:0 0 6px;">Hotline Admin KFFR</h3>
+                        <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">Validasi turnamen, pengaduan, atau kerjasama sponsor regional? Hubungi tim admin.</p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#71717a;">
+                        <i class="fa-solid fa-clock" style="color:#ef4444;font-size:10px;"></i> Respons 08.00–21.00 WIB
+                    </div>
+                    <a href="https://wa.me/+6282128777985" target="_blank" class="btn-red" style="justify-content:center;">
+                        <i class="fa-brands fa-whatsapp"></i> Hubungi Admin
+                    </a>
+                </div>
+
+                <!-- Instagram -->
+                <div class="bento" style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+                    <div style="width:48px;height:48px;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size:16px;font-weight:800;color:#fff;margin:0 0 6px;">Instagram Resmi</h3>
+                        <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">Update highlight pertandingan, jadwal, dan konten komunitas Free Fire Indramayu.</p>
+                    </div>
+                    <div style="font-size:13px;color:#a1a1aa;font-weight:600;">@kff.indramayu</div>
+                    <a href="https://instagram.com/kff.indramayu" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:12px;font-weight:800;font-size:13px;background:#27272a;color:#fff;text-decoration:none;border:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='#3f3f46'" onmouseout="this.style.background='#27272a'">
+                        <i class="fa-brands fa-instagram" style="color:#f472b6;"></i> Ikuti di Instagram
+                    </a>
+                </div>
+
+                <!-- TikTok -->
+                <div class="bento" style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+                    <div style="width:48px;height:48px;background:#111;border:1px solid #27272a;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size:16px;font-weight:800;color:#fff;margin:0 0 6px;">TikTok</h3>
+                        <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">Video gameplay, momen highlight, dan konten hiburan komunitas Free Fire Indramayu.</p>
+                    </div>
+                    <div style="font-size:13px;color:#a1a1aa;font-weight:600;">@ff.indramayu</div>
+                    <a href="https://tiktok.com/@ff.indramayu" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:12px;font-weight:800;font-size:13px;background:#27272a;color:#fff;text-decoration:none;border:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='#3f3f46'" onmouseout="this.style.background='#27272a'">
+                        <i class="fa-brands fa-tiktok"></i> Ikuti di TikTok
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats bar -->
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 24px;display:flex;gap:0;flex-wrap:wrap;">
+                <div style="flex:1;min-width:120px;text-align:center;padding:12px;">
+                    <div class="comic-title" style="font-size:32px;color:#ef4444;" id="stat-total">–</div>
+                    <div style="font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Total Turnamen</div>
+                </div>
+                <div style="width:1px;background:var(--border);"></div>
+                <div style="flex:1;min-width:120px;text-align:center;padding:12px;">
+                    <div class="comic-title" style="font-size:32px;color:#22c55e;" id="stat-active">–</div>
+                    <div style="font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Sedang Aktif</div>
+                </div>
+                <div style="width:1px;background:var(--border);"></div>
+                <div style="flex:1;min-width:120px;text-align:center;padding:12px;">
+                    <div class="comic-title" style="font-size:32px;color:#f59e0b;" id="stat-prize">–</div>
+                    <div style="font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Total Prizepool</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Footer -->
+<footer style="border-top:1px solid var(--border);padding:28px 20px;text-align:center;background:#0d0d0f;">
+    <div style="display:flex;justify-content:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+        <a href="https://instagram.com/kff.indramayu" target="_blank" style="display:flex;align-items:center;gap:6px;color:#71717a;text-decoration:none;font-size:13px;font-weight:700;transition:color .15s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#71717a'">
+            <i class="fa-brands fa-instagram"></i> @kff.indramayu
+        </a>
+        <span style="color:#27272a;">·</span>
+        <a href="https://tiktok.com/@ff.indramayu" target="_blank" style="display:flex;align-items:center;gap:6px;color:#71717a;text-decoration:none;font-size:13px;font-weight:700;transition:color .15s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#71717a'">
+            <i class="fa-brands fa-tiktok"></i> @ff.indramayu
+        </a>
+    </div>
+    <p style="font-size:12px;color:#3f3f46;margin:0;">&copy; 2026 KFFR Indramayu · Turnamen Free Fire Offline Regional</p>
+</footer>
+
+<!-- Toast -->
+<div id="toast"><span class="toast-icon" id="toast-icon"></span><span id="toast-msg"></span></div>
+
+<!-- Scroll Top -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas"><i class="fa-solid fa-arrow-up"></i></button>
+
+<!-- Detail Modal -->
+<div class="modal-overlay" id="detail-modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+            <h3 class="comic-title" style="font-size:22px;color:#fff;margin:0;" id="modal-title">Detail Turnamen</h3>
+            <button onclick="closeModal()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4UcnlRuhCAAEV4-q4_s8--rwsPpYpaf97KgfLF8rU-ucNkEF_n94WJQ4AWwPLL3R8ZA/exec";
+    let tournaments = [];
+    let activeFilter = 'all';
+    let countdownInterval = null;
+
+    // ─── NAV ───
+    function switchPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('page-' + id).classList.add('active');
+        document.getElementById('nav-' + id).classList.add('active');
+        window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    // ─── FILTER CHIPS ───
+    function setFilter(el, val) {
+        activeFilter = val;
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        renderHomeGrid();
+    }
+
+    // ─── TOAST ───
+    function showToast(msg, type='success') {
+        const t = document.getElementById('toast');
+        const icon = document.getElementById('toast-icon');
+        document.getElementById('toast-msg').textContent = msg;
+        icon.innerHTML = type==='success' ? '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i>' : '<i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i>';
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    // ─── DATE FORMAT ───
+    function fmtDate(d) {
+        if(!d) return '-';
+        return new Date(d).toLocaleDateString('id-ID', {year:'numeric', month:'long', day:'numeric'});
+    }
+    function isUpcoming(d) { return d && new Date(d) >= new Date(); }
+
+    // ─── FETCH ───
+    async function fetchApprovedTournaments() {
+        const grid = document.getElementById('tournament-grid');
+        grid.innerHTML = `<div style="grid-column:1/-1;padding:60px 0;text-align:center;">
+            <div style="width:48px;height:48px;border-radius:50%;border:3px solid #ef444440;border-top-color:#ef4444;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
+            <p style="color:#71717a;font-size:14px;font-weight:600;">Memuat jadwal turnamen...</p>
+        </div>`;
+        try {
+            const r = await fetch(SCRIPT_URL + '?action=read');
+            const res = await r.json();
+            if(res.status === 'success') tournaments = res.data;
+        } catch(e) { console.error(e); }
+        renderHomeGrid();
+        updateStats();
+        startCountdown();
+    }
+
+    // ─── RENDER GRID ───
+    function renderHomeGrid() {
+        const grid = document.getElementById('tournament-grid');
+        const q = document.getElementById('search-input').value.toLowerCase();
+        const now = new Date();
+
+        let list = tournaments.filter(t => t.status === 'Approved' || t.status === 'Aktif');
+        if(activeFilter === 'upcoming') list = list.filter(t => isUpcoming(t.date));
+        if(activeFilter === 'past')     list = list.filter(t => !isUpcoming(t.date));
+        if(q) list = list.filter(t => (t.title||'').toLowerCase().includes(q) || (t.location||'').toLowerCase().includes(q));
+
+        const cnt = document.getElementById('result-count');
+        cnt.textContent = list.length + ' turnamen ditemukan';
+
+        if(list.length === 0) {
+            grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;border:1px dashed var(--border);border-radius:18px;">
+                <i class="fa-solid fa-calendar-xmark"></i>
+                <p style="font-size:15px;font-weight:700;margin:0 0 6px;color:#52525b;">Tidak ada turnamen</p>
+                <p style="font-size:13px;margin:0;color:#3f3f46;">Coba ubah kata kunci atau filter pencarian.</p>
+            </div>`;
+            return;
         }
 
-        function switchPage(pageId) {
-            ['home', 'register', 'community'].forEach(p => {
-                const element = document.getElementById(`page-${p}`);
-                const navBtn = document.getElementById(`nav-${p}`);
-                if (element) element.classList.add('hidden');
-                if (navBtn) navBtn.className = "flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold text-neutral-400 hover:text-white transition-all";
-            });
-            document.getElementById(`page-${pageId}`).classList.remove('hidden');
-            document.getElementById(`nav-${pageId}`).className = "flex-1 md:flex-none text-center px-5 py-2.5 rounded-lg text-sm font-bold bg-red-600 text-white transition-all btn-comic border-black";
+        // Sort: upcoming first
+        list.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+        grid.innerHTML = '';
+        list.forEach(t => {
+            const upcoming = isUpcoming(t.date);
+            const card = document.createElement('div');
+            card.className = 'tour-card';
+            card.innerHTML = `
+                <div class="tour-card-img-placeholder">
+                    <i class="fa-solid fa-gamepad" style="font-size:36px;color:#3f3f46;"></i>
+                    <div class="status-badge ${upcoming ? 'badge-soon' : ''}" style="${!upcoming ? 'background:#27272a;color:#71717a;font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;position:absolute;top:10px;right:10px;' : ''}">
+                        ${upcoming ? '<i class="fa-solid fa-hourglass-half" style="margin-right:4px;"></i>Mendatang' : '<i class="fa-solid fa-flag-checkered" style="margin-right:4px;"></i>Selesai'}
+                    </div>
+                </div>
+                <div style="padding:16px;display:flex;flex-direction:column;flex:1;gap:12px;">
+                    <div>
+                        <div style="font-size:11px;color:#ef4444;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;display:flex;align-items:center;gap:5px;">
+                            <i class="fa-solid fa-calendar-day"></i>${fmtDate(t.date)}
+                        </div>
+                        <h3 style="font-size:16px;font-weight:800;color:#fff;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;">${t.title}</h3>
+                    </div>
+                    <div style="display:flex;align-items:flex-start;gap:7px;font-size:13px;color:#a1a1aa;">
+                        <i class="fa-solid fa-location-dot" style="color:#ef4444;margin-top:2px;flex-shrink:0;"></i>
+                        <span style="line-height:1.4;">${t.location || 'Area Indramayu'}</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#0d0d0f;border-radius:10px;padding:10px 12px;border:1px solid var(--border);">
+                        <div>
+                            <div style="font-size:10px;font-weight:800;color:#52525b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Hadiah</div>
+                            <div style="font-size:15px;font-weight:900;color:#22c55e;">${t.prize || '-'}</div>
+                        </div>
+                        <div>
+                            <div style="font-size:10px;font-weight:800;color:#52525b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Slot</div>
+                            <div style="font-size:15px;font-weight:900;color:#fff;">${t.slots} Tim</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:8px;margin-top:auto;">
+                        <button onclick="openDetail('${t.id}')" style="flex:1;padding:10px;border-radius:10px;font-weight:800;font-size:12px;background:#27272a;color:#a1a1aa;border:1px solid var(--border);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='#3f3f46'" onmouseout="this.style.background='#27272a'">
+                            <i class="fa-solid fa-circle-info" style="margin-right:5px;"></i>Detail
+                        </button>
+                        <a href="${t.contact}" target="_blank" class="btn-red" style="flex:2;justify-content:center;">
+                            <i class="fa-brands fa-whatsapp"></i> Hubungi
+                        </a>
+                    </div>
+                </div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    // ─── DETAIL MODAL ───
+    function openDetail(id) {
+        const t = tournaments.find(x => String(x.id) === String(id));
+        if(!t) return;
+        document.getElementById('modal-title').textContent = t.title;
+        document.getElementById('modal-body').innerHTML = `
+            <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <span style="background:#ef444415;color:#ef4444;font-size:12px;font-weight:800;padding:5px 12px;border-radius:99px;border:1px solid #ef444430;">${isUpcoming(t.date) ? '🕐 Mendatang' : '✅ Selesai'}</span>
+                </div>
+                <div style="display:grid;gap:12px;">
+                    ${detailRow('fa-calendar','Tanggal', fmtDate(t.date))}
+                    ${detailRow('fa-location-dot','Lokasi', t.location || 'Area Indramayu')}
+                    ${detailRow('fa-trophy','Total Hadiah', '<span style="color:#22c55e;font-weight:900;">' + (t.prize||'-') + '</span>')}
+                    ${detailRow('fa-users','Kapasitas Slot', t.slots + ' Tim')}
+                </div>
+                <a href="${t.contact}" target="_blank" class="btn-red" style="justify-content:center;width:100%;margin-top:8px;">
+                    <i class="fa-brands fa-whatsapp"></i> Hubungi Panitia untuk Daftar
+                </a>
+            </div>`;
+        document.getElementById('detail-modal').classList.add('open');
+    }
+
+    function detailRow(icon, label, val) {
+        return `<div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:34px;height:34px;border-radius:9px;background:#27272a;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fa-solid ${icon}" style="color:#ef4444;font-size:14px;"></i>
+            </div>
+            <div>
+                <div style="font-size:11px;font-weight:800;color:#52525b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">${label}</div>
+                <div style="font-size:14px;font-weight:700;color:#f4f4f5;">${val}</div>
+            </div>
+        </div>`;
+    }
+
+    function closeModal() { document.getElementById('detail-modal').classList.remove('open'); }
+
+    // ─── STATS ───
+    function updateStats() {
+        const approved = tournaments.filter(t => t.status === 'Approved' || t.status === 'Aktif');
+        const active   = approved.filter(t => isUpcoming(t.date));
+        document.getElementById('stat-total').textContent  = approved.length;
+        document.getElementById('stat-active').textContent = active.length;
+        // Sum prize (simple heuristic)
+        let sum = 0;
+        approved.forEach(t => {
+            const n = parseInt((t.prize||'').replace(/\D/g,''));
+            if(!isNaN(n)) sum += n;
+        });
+        document.getElementById('stat-prize').textContent = sum > 0 ? 'Rp ' + (sum/1e6).toFixed(0) + ' Jt' : '-';
+    }
+
+    // ─── COUNTDOWN ───
+    function startCountdown() {
+        const upcoming = tournaments
+            .filter(t => (t.status==='Approved'||t.status==='Aktif') && isUpcoming(t.date))
+            .sort((a,b) => new Date(a.date)-new Date(b.date));
+        if(!upcoming.length) return;
+        const next = upcoming[0];
+        document.getElementById('next-name').textContent = next.title;
+        document.getElementById('next-tournament-countdown').style.display = 'block';
+        if(countdownInterval) clearInterval(countdownInterval);
+        function tick() {
+            const diff = new Date(next.date) - new Date();
+            if(diff <= 0) { clearInterval(countdownInterval); return; }
+            const d = Math.floor(diff/864e5);
+            const h = Math.floor((diff%864e5)/36e5);
+            const m = Math.floor((diff%36e5)/6e4);
+            document.getElementById('cd-days').textContent  = String(d).padStart(2,'0');
+            document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+            document.getElementById('cd-mins').textContent  = String(m).padStart(2,'0');
         }
+        tick();
+        countdownInterval = setInterval(tick, 30000);
+    }
 
-        function filterTournaments() {
-            renderHomeGrid();
-        }
-
-        function formatDate(dateStr) {
-            if(!dateStr) return "-";
-            return new Date(dateStr).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
-        }
-
-        function renderHomeGrid() {
-            const grid = document.getElementById('tournament-grid');
-            grid.innerHTML = '';
-            
-            const approvedItems = tournaments.filter(t => t.status === 'Approved' || t.status === 'Aktif');
-            const searchVal = document.getElementById('search-input').value.toLowerCase();
-
-            const filtered = approvedItems.filter(t => {
-                return String(t.title).toLowerCase().includes(searchVal) || String(t.location).toLowerCase().includes(searchVal);
-            });
-
-            if(filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-16 text-neutral-400 text-sm border-2 border-dashed border-neutral-800 rounded-2xl bg-neutral-900/30">Tidak ada jadwal turnamen offline Free Fire yang ditemukan.</div>`;
+    // ─── MULTI-STEP FORM ───
+    function goStep(n) {
+        if(n===2) {
+            const title = document.getElementById('reg-title');
+            const date  = document.getElementById('reg-date');
+            const slots = document.getElementById('reg-slots');
+            const prize = document.getElementById('reg-prize');
+            const loc   = document.getElementById('reg-location');
+            if(!title.value||!date.value||!slots.value||!prize.value||!loc.value) {
+                showToast('Lengkapi semua field terlebih dahulu.','warn');
                 return;
             }
+        }
+        document.getElementById('step-1').style.display = n===1 ? '' : 'none';
+        document.getElementById('step-2').style.display = n===2 ? '' : 'none';
+        ['dot-1','dot-2','dot-3'].forEach((id,i) => {
+            const el = document.getElementById(id);
+            el.style.background = i < n ? '#ef4444' : '#27272a';
+            el.style.color      = i < n ? '#fff' : '#71717a';
+        });
+    }
 
-            filtered.forEach(t => {
-                const card = document.createElement('div');
-                card.className = "bento-card rounded-2xl p-5 flex flex-col justify-between space-y-5";
-                card.innerHTML = `
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center gap-2">
-                            <div class="text-xs text-neutral-300 font-semibold bg-neutral-950 px-2.5 py-1 rounded-md border border-neutral-800"><i class="fa-solid fa-calendar-day text-red-500 mr-1.5"></i>${formatDate(t.date)}</div>
-                        </div>
-                        <h3 class="font-extrabold text-lg text-white leading-snug pt-1 truncate-2-lines h-14">${t.title}</h3>
-                        <p class="text-sm text-neutral-400 flex items-start gap-2"><i class="fa-solid fa-location-dot text-red-500 mt-1 flex-shrink-0"></i> <span class="line-clamp-2 font-medium">${t.location || 'Area Indramayu'}</span></p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 bg-neutral-950 p-3 text-sm rounded-xl border border-neutral-800 shadow-inner">
-                        <div>
-                            <span class="text-neutral-500 block text-[10px] uppercase tracking-wider font-extrabold mb-0.5">Total Hadiah</span>
-                            <span class="font-extrabold text-emerald-400 text-sm md:text-base">Rp ${t.prize}</span>
-                        </div>
-                        <div>
-                            <span class="text-neutral-500 block text-[10px] uppercase tracking-wider font-extrabold mb-0.5">Kapasitas Slot</span>
-                            <span class="font-bold text-white text-sm md:text-base">${t.slots} Tim</span>
-                        </div>
-                    </div>
-                    <div class="pt-1">
-                        <a href="${t.contact}" target="_blank" class="w-full block text-center bg-red-600 hover:bg-red-500 text-white font-extrabold py-2.5 rounded-xl btn-comic border-black text-xs md:text-sm uppercase tracking-widest transition-all">
-                            <i class="fa-brands fa-whatsapp mr-2 text-base"></i> Hubungi Panitia
-                        </a>
-                    </div>`;
-                grid.appendChild(card);
+    // ─── REGISTRATION ───
+    async function handleRegistration(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Mengirim...`;
+        const data = {
+            action:'insert', game:'Free Fire',
+            title:    document.getElementById('reg-title').value,
+            date:     document.getElementById('reg-date').value,
+            slots:    parseInt(document.getElementById('reg-slots').value)||0,
+            prize:    document.getElementById('reg-prize').value,
+            location: document.getElementById('reg-location').value,
+            contact:  document.getElementById('reg-contact').value,
+        };
+        try {
+            await fetch(SCRIPT_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(data) });
+        } catch(err) {}
+        showToast('Pengajuan turnamen berhasil dikirim! Menunggu review admin.');
+        document.getElementById('form-registrasi').reset();
+        goStep(1);
+        switchPage('home');
+        setTimeout(fetchApprovedTournaments, 2000);
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan`;
+    }
+
+    // ─── SCROLL TOP ───
+    window.addEventListener('scroll', () => {
+        document.getElementById('scroll-top').classList.toggle('visible', window.scrollY > 400);
+    });
+
+    // ─── SPIN ANIM ───
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+
+    // ─── BANNER SLIDER ───
+    (function(){
+        const SLIDE_DURATION = 4500; // ms per slide
+        let current = 0;
+        let total   = 0;
+        let timer   = null;
+        let progTimer = null;
+        let progStart = null;
+
+        function init() {
+            const slides = document.querySelectorAll('.banner-slide');
+            total = slides.length;
+            if(!total) return;
+            const dotsWrap = document.getElementById('slider-dots');
+            for(let i=0;i<total;i++){
+                const d = document.createElement('button');
+                d.className = 'slider-dot' + (i===0?' active':'');
+                d.setAttribute('aria-label','Slide '+(i+1));
+                d.onclick = () => goTo(i);
+                dotsWrap.appendChild(d);
+            }
+            goTo(0);
+        }
+
+        function goTo(n) {
+            current = (n + total) % total;
+            document.getElementById('banner-slides').style.transform = `translateX(-${current*100}%)`;
+            document.querySelectorAll('.slider-dot').forEach((d,i) => d.classList.toggle('active', i===current));
+            resetProgress();
+            clearTimeout(timer);
+            timer = setTimeout(() => goTo(current+1), SLIDE_DURATION);
+        }
+
+        function resetProgress() {
+            const bar = document.getElementById('slider-progress');
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            cancelAnimationFrame(progTimer);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    bar.style.transition = `width ${SLIDE_DURATION}ms linear`;
+                    bar.style.width = '100%';
+                });
             });
         }
 
-        async function handleRegistration(e) {
-            e.preventDefault();
-            const submitBtn = e.target.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = `Memproses Data...`;
+        window.sliderMove = function(dir){ goTo(current + dir); };
 
-            const formData = {
-                action: "insert",
-                title: document.getElementById('reg-title').value,
-                game: "Free Fire",
-                date: document.getElementById('reg-date').value,
-                slots: parseInt(document.getElementById('reg-slots').value) || 0,
-                prize: document.getElementById('reg-prize').value,
-                location: document.getElementById('reg-location').value,
-                contact: document.getElementById('reg-contact').value
-            };
-
-            try {
-                await fetch(SCRIPT_URL, { 
-                    method: "POST", 
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(formData) 
-                });
-                alert("Pendaftaran turnamen offline berhasil diajukan! Menunggu persetujuan admin.");
-                document.getElementById('form-registrasi').reset();
-                switchPage('home');
-                setTimeout(fetchApprovedTournaments, 1500);
-            } catch (err) { 
-                alert("Sukses mengajukan ke basis data!");
-                document.getElementById('form-registrasi').reset();
-                switchPage('home');
-                setTimeout(fetchApprovedTournaments, 1500);
-            } finally { 
-                submitBtn.disabled = false; 
-                submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane mr-2"></i>Kirim Pengajuan`; 
-            }
+        // Pause on hover
+        const el = document.getElementById('banner-slider');
+        if(el){
+            el.addEventListener('mouseenter', () => clearTimeout(timer));
+            el.addEventListener('mouseleave', () => { timer = setTimeout(() => goTo(current+1), SLIDE_DURATION); });
+            // Touch swipe
+            let tx=0;
+            el.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+            el.addEventListener('touchend',   e => {
+                const dx = e.changedTouches[0].clientX - tx;
+                if(Math.abs(dx)>40) goTo(current + (dx<0?1:-1));
+            });
         }
 
-        window.onload = fetchApprovedTournaments;
-    </script>
+        if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+    })();
+
+    window.onload = fetchApprovedTournaments;
+</script>
 </body>
 </html>
